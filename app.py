@@ -50,8 +50,11 @@ if st.button("Scout products", type="primary"):
 if products := st.session_state.get("products"):
     df = pd.DataFrame(products)[["image", "title", "product_type", "price", "our_price", "matched_title", "cost"]]
     st.success(f"{len(df)} products scouted, {int((df.matched_title != '').sum())} matched to your catalogue.")
-    st.dataframe(df, column_config={"image": st.column_config.ImageColumn("Image"),
+    if scout.IN_BROWSER:  # the canvas data grid stays blank under stlite, so use a static table
+        st.table(df.drop(columns="image"))
+    else:
+      st.dataframe(df, column_config={"image": st.column_config.ImageColumn("Image"),
                                     "price": "Competitor", "our_price": "Our price"},
-                 use_container_width=True, hide_index=True)
+                   use_container_width=True, hide_index=True)
     st.download_button("⬇️ Download Shopify import CSV", scout.to_shopify_csv(products),
                        "shopify_import.csv", "text/csv")
