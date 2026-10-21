@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shopify Product Scout Agent · live demo</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@stlite/browser@1.12.0/build/style.css" />
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module">
+    import { mount } from "https://cdn.jsdelivr.net/npm/@stlite/browser@1.12.0/build/stlite.js";
+    mount({
+      requirements: ["pandas", "beautifulsoup4", "requests"],
+      entrypoint: "app.py",
+      files: {
+        "app.py": { url: "./app.py" },
+        "scout.py": { url: "./scout.py" },
+        "data/demo_competitor.json": { url: "./data/demo_competitor.json" },
+        "data/demo_own_catalogue.csv": { url: "./data/demo_own_catalogue.csv" },
+      },
+    }, document.getElementById("root"));
+  </script>
+</body>
+</html>

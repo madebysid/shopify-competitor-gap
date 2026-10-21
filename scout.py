@@ -1,11 +1,12 @@
 """Core logic: fetch competitor products, match, price, rewrite, export."""
-import json, math, re, difflib
+import json, math, re, sys, difflib
 from pathlib import Path
 from urllib.parse import urlparse
 import pandas as pd, requests
 from bs4 import BeautifulSoup
 
 UA = {"User-Agent": "Mozilla/5.0 (product-scout-agent)"}
+IN_BROWSER = sys.platform == "emscripten"  # stlite / Pyodide: CORS blocks live scraping
 DEMO = Path(__file__).parent / "data" / "demo_competitor.json"
 
 
@@ -58,6 +59,21 @@ def fetch_products(url=None, limit=50):
         return _from_products_json(url, limit) or _from_html(url, limit)
     except requests.RequestException:
         return []
+
+
+def fetch_own_catalogue(store_url, cost_pct=0.5, max_pages=20, get=None):
+    """Pull your own catalogue from <store>/products.json (paginated, 250/page).
+    Shopify's public JSON has no cost, so cost = price * cost_pct as a proxy."""
+    get = get or (lambda u, p: requests.get(u, params=p, headers=UA, timeout=15).json())
+    base, rows = store_url.split("?")[0].rstrip("/"), []
+    for page in range(1, max_pages + 1):
+        batch = get(f"{base}/products.json", {"limit": 250, "page": page}).get("products", [])
+        for p in batch:
+            price = float((p.get("variants") or [{}])[0].get("price") or 0)
+            rows.append({"title": p.get("title", ""), "price": price, "cost": round(price * cost_pct, 2)})
+        if len(batch) < 250:
+            break
+    return pd.DataFrame(rows, columns=["title", "price", "cost"])
 
 
 def round_99(x, up=False):

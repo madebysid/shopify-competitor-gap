@@ -13,9 +13,17 @@ with st.sidebar:
     provider = st.selectbox("Provider", ["None", "OpenAI", "Anthropic"])
     key = st.text_input("API key", type="password") if provider != "None" else ""
 
-url = st.text_input("Competitor collection URL (leave empty for demo data)",
+if scout.IN_BROWSER:
+    st.info("Browser demo: live URL scraping is off here because browsers block cross-site requests (CORS). "
+            "Run locally or on Streamlit Cloud to scrape real stores. Demo data and CSV upload work.")
+url = "" if scout.IN_BROWSER else st.text_input("Competitor collection URL (leave empty for demo data)",
                     placeholder="https://store.example.com/collections/new")
-own_file = st.file_uploader("Your catalogue CSV (columns: title, cost) - optional", type="csv")
+src = st.radio("Your catalogue (optional)", ["None", "CSV upload"] + ([] if scout.IN_BROWSER else ["My store URL"]),
+               horizontal=True)
+own_file = st.file_uploader("Catalogue CSV (columns: title, cost)", type="csv") if src == "CSV upload" else None
+my_store = st.text_input("My store URL", placeholder="https://mystore.com") if src == "My store URL" else ""
+cost_pct = st.slider("Cost assumption (% of my price, used when no cost is given)", 5, 95, 50,
+                     disabled=src != "My store URL") / 100
 limit = st.number_input("Max products", 1, 250, 50)
 
 if st.button("Scout products", type="primary"):
@@ -25,6 +33,10 @@ if st.button("Scout products", type="primary"):
         st.error("No products found. Try the store's /collections/... URL or leave empty for demo data.")
         st.stop()
     own = pd.read_csv(own_file) if own_file else None
+    if my_store.strip():
+        with st.spinner("Loading my catalogue..."):
+            own = scout.fetch_own_catalogue(my_store.strip(), cost_pct)
+        st.write(f"Loaded {len(own)} products from my store (cost = {cost_pct:.0%} of price).")
     products = scout.match(products, own)
     for p in products:
         p["our_price"] = scout.price_for(p["price"], p["cost"], margin, undercut)

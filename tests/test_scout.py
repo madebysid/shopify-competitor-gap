@@ -14,3 +14,13 @@ def test_demo_pipeline_exports_csv():
     for p in ps: p["our_price"] = scout.price_for(p["price"], p["cost"])
     csv = scout.to_shopify_csv(ps)
     assert csv.startswith("Handle,Title") and csv.count("\n") == 16
+
+def test_own_catalogue_paginates_and_uses_cost_proxy():
+    pages = {1: [{"title": f"P{i}", "variants": [{"price": "10.00"}]} for i in range(250)],
+             2: [{"title": "Last", "variants": [{"price": "40.00"}]}]}
+    calls = []
+    def fake_get(url, params):
+        calls.append(params["page"]); return {"products": pages.get(params["page"], [])}
+    df = scout.fetch_own_catalogue("https://x.com/", cost_pct=0.3, get=fake_get)
+    assert calls == [1, 2] and len(df) == 251
+    assert df.iloc[-1].cost == 12.0 and list(df.columns) == ["title", "price", "cost"]
