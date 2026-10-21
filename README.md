@@ -1,41 +1,53 @@
-# 🛍️ Shopify Product Scout Agent
+# 🔍 Shopify Competitor Gap
 
-Point it at a competitor's Shopify collection, match what they sell against your own catalogue, price every product with a clear rule, optionally let an LLM rewrite the copy, and download a ready-to-import Shopify CSV.
-
-**[▶ Live demo](https://madebysid.github.io/shopify-product-scout-agent/)**: runs fully in your browser with [stlite](https://github.com/whitphx/stlite), on demo data (first load takes ~30s).
+**[▶ Live demo](https://madebysid.github.io/shopify-competitor-gap/)**: a real cached comparison that runs in your browser (first load takes ~30s).
 
 ![screenshot](assets/screenshot.png)
 
-This is a small, open version of the product engine I built as Technical Director at EcomVest, which took catalogue output across our Shopify stores from about 100 to about 1,000 products a week.
+## The problem
+Ecommerce teams check competitors by hand: open their store, scroll, guess what overlaps and who's cheaper. That doesn't scale past a few dozen products, and the useful questions stay unanswered:
+- Which of their products do I already sell, and am I more expensive?
+- What do they sell that I don't? That list is my range opportunity.
+- What only I sell, so I can lean on it?
+
+Paste two Shopify store URLs and get all three answers, with CSVs, in under a minute.
+
+## Real example (cached in the demo)
+undefeated.com (as "my store") vs sneakerpolitics.com, pulled Oct 21, 2026 at the default threshold of 85:
+
+| My products | Their products | Covered | Missing | Unique to me | I cover of theirs | Avg gap on overlaps | Pricier / cheaper |
+|---|---|---|---|---|---|---|---|
+| 1,314 | 2,500* | 67 | 2,433 | 1,250 | 2.7% | +9.0% | 22 / 21 (24 same price) |
+
+\*Capped at 10 pages × 250 products.
 
 ## Features
-- **Scrape any collection**: reads Shopify's `/products.json` when the store exposes it, falls back to HTML parsing with requests + BeautifulSoup.
-- **Runs with no key**: leave the URL empty to use 15 bundled demo products (`data/demo_competitor.json`).
-- **Catalogue matching**: upload a `title,cost` CSV, or enter **My store URL** to pull your own catalogue from `/products.json` (paginated). Shopify's public JSON has no cost, so cost = price × a cost-% slider you set. Titles are fuzzy-matched.
-- **Pricing rule**: undercut the competitor by X%, never below `cost / (1 - target margin)`, snapped to `.99`.
-- **Optional AI rewrite**: bring your own OpenAI or Anthropic key to rewrite titles and descriptions.
-- **Shopify import CSV**: products export as drafts, with the competitor price as compare-at.
+- Pulls both full catalogues from `/products.json`, paginated (250 per page, 10 pages by default). Price = lowest variant price.
+- Matching: same handle first, else a fuzzy title score (rapidfuzz `token_sort_ratio`) within the same vendor. There's a **threshold slider** for how strict it is.
+- **Covered**: my price, their price, the difference, the % difference, and an "I'm more expensive / I'm cheaper" flag.
+- **Missing**: what they sell and I don't, most expensive first.
+- **Unique to me**.
+- Summary metrics and a CSV download for each view.
 
 ## Setup
 ```bash
 pip install -r requirements.txt
 streamlit run app.py
 ```
-Try it with `data/demo_own_catalogue.csv` as your catalogue.
-
-## Browser demo vs local
-The GitHub Pages demo (`docs/`) runs on Pyodide. Browsers block cross-site requests (CORS), so live URL scraping and My store URL are turned off there. Run locally or on Streamlit Cloud for real stores. `docs/app.py` and `docs/scout.py` are copies of the root files.
 
 ## How it works
-1. `scout.fetch_products()` tries `<collection>/products.json`, then HTML product cards.
-2. `scout.match()` fuzzy-matches titles (`difflib`) to your catalogue.
-3. `scout.price_for()` applies undercut → margin floor → `.99` rounding.
-4. `scout.rewrite()` (optional) calls the chosen LLM and asks for JSON.
-5. `scout.to_shopify_csv()` writes Shopify's product import columns.
+1. `gap.fetch_catalogue(url)` reads `<store>/products.json?limit=250&page=N` until a page comes back short.
+2. `gap.match_catalogues(mine, theirs, threshold)` finds the best match in my catalogue for each competitor product.
+3. `gap.summary(...)` calculates coverage (the share of their products I match) and the average % price gap.
+4. `app.py` shows the metrics, three tabs and CSV links.
 
 Tests: `pip install pytest && pytest -q`
 
-Only scrape stores whose terms allow it, and review AI-written copy before publishing.
+## Limitations
+- Only works on Shopify stores that expose `/products.json`. Some stores block it.
+- It compares list prices in each store's own currency, with no currency conversion.
+- Colourways and sizes listed as separate products may match one-to-many or miss. Use the slider and check the match score.
+- The browser demo runs on Pyodide. Browsers block cross-site requests (CORS), so it shows only the cached example and uses a difflib matcher in place of rapidfuzz (same results on the example). `docs/` holds copies of `app.py` and `gap.py`.
 
 ## Author
-Siddharth Kumar · [sidailab.com](https://sidailab.com) · MIT licensed
+Siddharth Kumar · [sidailab.com](https://sidailab.com) · MIT licensed. I built and ran a product engine at EcomVest that scraped competitor catalogues for our Shopify stores and took output from about 100 to about 1,000 products a week. This is a small, open tool from the same playbook.
