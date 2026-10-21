@@ -1,0 +1,137 @@
+[
+ {
+  "handle": "linen-blend-overshirt",
+  "title": "Linen Blend Overshirt",
+  "product_type": "Apparel",
+  "vendor": "DemoCompetitor",
+  "price": 34.95,
+  "body_html": "<p>Linen Blend Overshirt. Everyday quality, ships fast.</p>",
+  "image": "https://picsum.photos/seed/0/600"
+ },
+ {
+  "handle": "ribbed-knit-beanie",
+  "title": "Ribbed Knit Beanie",
+  "product_type": "Accessories",
+  "vendor": "DemoCompetitor",
+  "price": 14.95,
+  "body_html": "<p>Ribbed Knit Beanie. Everyday quality, ships fast.</p>",
+  "image": "https://picsum.photos/seed/1/600"
+ },
+ {
+  "handle": "stainless-steel-water-bottle-750ml",
+  "title": "Stainless Steel Water Bottle 750ml",
+  "product_type": "Home",
+  "vendor": "DemoCompetitor",
+  "price": 22.95,
+  "body_html": "<p>Stainless Steel Water Bottle 750ml. Everyday quality, ships fast.</p>",
+  "image": "https://picsum.photos/seed/2/600"
+ },
+ {
+  "handle": "bamboo-cutting-board-set",
+  "title": "Bamboo Cutting Board Set",
+  "product_type": "Home",
+  "vendor": "DemoCompetitor",
+  "price": 29.95,
+  "body_html": "<p>Bamboo Cutting Board Set. Everyday quality, ships fast.</p>",
+  "image": "https://picsum.photos/seed/3/600"
+ },
+ {
+  "handle": "wireless-charging-pad",
+  "title": "Wireless Charging Pad",
+  "product_type": "Electronics",
+  "vendor": "DemoCompetitor",
+  "price": 19.95,
+  "body_html": "<p>Wireless Charging Pad. Everyday quality, ships fast.</p>",
+  "image": "https://picsum.photos/seed/4/600"
+ },
+ {
+  "handle": "silicone-phone-case",
+  "title": "Silicone Phone Case",
+  "product_type": "Electronics",
+  "vendor": "DemoCompetitor",
+  "price": 12.95,
+  "body_html": "<p>Silicone Phone Case. Everyday quality, ships fast.</p>",
+  "image": "https://picsum.photos/seed/5/600"
+ },
+ {
+  "handle": "yoga-mat-6mm",
+  "title": "Yoga Mat 6mm",
+  "product_type": "Fitness",
+  "vendor": "DemoCompetitor",
+  "price": 31.95,
+  "body_html": "<p>Yoga Mat 6mm. Everyday quality, ships fast.</p>",
+  "image": "https://picsum.photos/seed/6/600"
+ },
+ {
+  "handle": "resistance-bands-set-of-5",
+  "title": "Resistance Bands Set of 5",
+  "product_type": "Fitness",
+  "vendor": "DemoCompetitor",
+  "price": 17.95,
+  "body_html": "<p>Resistance Bands Set of 5. Everyday quality, ships fast.</p>",
+  "image": "https://picsum.photos/seed/7/600"
+ },
+ {
+  "handle": "scented-soy-candle",
+  "title": "Scented Soy Candle",
+  "product_type": "Home",
+  "vendor": "DemoCompetitor",
+  "price": 18.95,
+  "body_html": "<p>Scented Soy Candle. Everyday quality, ships fast.</p>",
+  "image": "https://picsum.photos/seed/8/600"
+ },
+ {
+  "handle": "leather-card-holder",
+  "title": "Leather Card Holder",
+  "product_type": "Accessories",
+  "vendor": "DemoCompetitor",
+  "price": 24.95,
+  "body_html": "<p>Leather Card Holder. Everyday quality, ships fast.</p>",
+  "image": "https://picsum.photos/seed/9/600"
+ },
+ {
+  "handle": "oversized-cotton-hoodie",
+  "title": "Oversized Cotton Hoodie",
+  "product_type": "Apparel",
+  "vendor": "DemoCompetitor",
+  "price": 46.95,
+  "body_html": "<p>Oversized Cotton Hoodie. Everyday quality, ships fast.</p>",
+  "image": "https://picsum.photos/seed/10/600"
+ },
+ {
+  "handle": "ceramic-pour-over-coffee-set",
+  "title": "Ceramic Pour-Over Coffee Set",
+  "product_type": "Home",
+  "vendor": "DemoCompetitor",
+  "price": 38.95,
+  "body_html": "<p>Ceramic Pour-Over Coffee Set. Everyday quality, ships fast.</p>",
+  "image": "https://picsum.photos/seed/11/600"
+ },
+ {
+  "handle": "led-desk-lamp",
+  "title": "LED Desk Lamp",
+  "product_type": "Electronics",
+  "vendor": "DemoCompetitor",
+  "price": 33.95,
+  "body_html": "<p>LED Desk Lamp. Everyday quality, ships fast.</p>",
+  "image": "https://picsum.photos/seed/12/600"
+ },
+ {
+  "handle": "travel-toiletry-bag",
+  "title": "Travel Toiletry Bag",
+  "product_type": "Accessories",
+  "vendor": "DemoCompetitor",
+  "price": 21.95,
+  "body_html": "<p>Travel Toiletry Bag. Everyday quality, ships fast.</p>",
+  "image": "https://picsum.photos/seed/13/600"
+ },
+ {
+  "handle": "insulated-lunch-box",
+  "title": "Insulated Lunch Box",
+  "product_type": "Home",
+  "vendor": "DemoCompetitor",
+  "price": 26.95,
+  "body_html": "<p>Insulated Lunch Box. Everyday quality, ships fast.</p>",
+  "image": "https://picsum.photos/seed/14/600"
+ }
+]
