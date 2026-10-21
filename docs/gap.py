@@ -46,18 +46,29 @@ def norm(s):
     return re.sub(r"[^a-z0-9 ]+", " ", str(s).lower()).strip()
 
 
+SIZE_TAGS = {"ps", "td", "gs", "kids", "kid", "toddler", "infant", "infants", "youth", "baby", "womens", "women", "wmns"}
+
+
+def size_group(title):
+    """Kids/women's tags in a title. Products only match if these agree (adult != kids sizes)."""
+    return frozenset(SIZE_TAGS & set(norm(title).replace("women s", "womens").split()))
+
+
 def match_catalogues(mine, theirs, threshold=85):
-    """For each competitor product, find my best match: same handle wins, else fuzzy title within the same vendor."""
+    """For each competitor product, find my best match: same handle wins, else fuzzy title within the same vendor
+    and the same size group (kids/women's tags)."""
     mine = mine.reset_index(drop=True)
     my_handles = {h: i for i, h in enumerate(mine.handle)}
     my_titles = [norm(t) for t in mine.title]
     my_vendors = [norm(v) for v in mine.vendor]
+    my_groups = [size_group(t) for t in mine.title]
     pairs = []
     for _, t in theirs.iterrows():
         if t.handle in my_handles:
             pairs.append((t, mine.loc[my_handles[t.handle]], 100.0)); continue
-        v = norm(t.vendor)
-        cand = {i: my_titles[i] for i in range(len(mine)) if not v or not my_vendors[i] or my_vendors[i] == v}
+        v, g = norm(t.vendor), size_group(t.title)
+        cand = {i: my_titles[i] for i in range(len(mine))
+                if (not v or not my_vendors[i] or my_vendors[i] == v) and my_groups[i] == g}
         hit = process.extractOne(norm(t.title), cand, scorer=fuzz.token_sort_ratio, score_cutoff=threshold)
         if hit:
             pairs.append((t, mine.loc[hit[2]], round(hit[1], 1)))

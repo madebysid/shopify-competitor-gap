@@ -9,7 +9,7 @@ def cat(rows):
 MINE = cat([("af1-white", "Nike Air Force 1 Low - White", "Nike", 110), ("nb-990", "New Balance 990v6 Grey", "New Balance", 200),
             ("my-tee", "House Logo Tee", "Mine", 40)])
 THEIRS = cat([("nike-af1-low-white", "NIKE AIR FORCE 1 LOW (WHITE)", "Nike", 100), ("nb-990", "NB 990 v6", "New Balance", 210),
-              ("samba", "Adidas Samba OG", "adidas", 120), ("af1-fake", "Nike Air Force 1 Low - White", "Reebok", 90)])
+              ("samba", "Adidas Samba OG", "adidas", 120), ("af1-ps", "Nike Air Force 1 Low (PS) - White", "Nike", 70), ("af1-fake", "Nike Air Force 1 Low - White", "Reebok", 90)])
 
 def test_match_views_and_summary():
     cov, miss, uniq = gap.match_catalogues(MINE, THEIRS, threshold=85)
@@ -17,10 +17,10 @@ def test_match_views_and_summary():
     af1 = cov[cov.my_title.str.startswith("Nike")].iloc[0]
     assert af1["diff"] == 10 and af1.diff_pct == 10.0 and af1.flag == "I'm more expensive"
     assert cov[cov.vendor == "New Balance"].iloc[0].flag == "I'm cheaper"
-    assert list(miss.title) == ["Adidas Samba OG", "Nike Air Force 1 Low - White"]   # sorted by price desc
+    assert list(miss.title) == ["Adidas Samba OG", "Nike Air Force 1 Low - White", "Nike Air Force 1 Low (PS) - White"]  # kids size not matched to adult   # sorted by price desc
     assert list(uniq.title) == ["House Logo Tee"]
     s = gap.summary(MINE, THEIRS, cov, miss, uniq)
-    assert s["coverage_pct"] == 50.0 and s["more_expensive"] == 1 and s["cheaper"] == 1
+    assert s["coverage_pct"] == 40.0 and s["more_expensive"] == 1 and s["cheaper"] == 1
 
 def test_fetch_paginates():
     pages = {1: [{"handle": f"p{i}", "title": "x", "variants": [{"price": "9"}, {"price": "5"}]} for i in range(250)],

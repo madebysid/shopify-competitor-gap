@@ -17,13 +17,13 @@ undefeated.com (as "my store") vs sneakerpolitics.com, pulled Oct 21, 2026 at th
 
 | My products | Their products | Covered | Missing | Unique to me | I cover of theirs | Avg gap on overlaps | Pricier / cheaper |
 |---|---|---|---|---|---|---|---|
-| 1,314 | 2,500* | 67 | 2,433 | 1,250 | 2.7% | +9.0% | 22 / 21 (24 same price) |
+| 1,314 | 2,500* | 61 | 2,439 | 1,255 | 2.4% | +2.6% | 18 / 20 (23 same price) |
 
 \*Capped at 10 pages × 250 products.
 
 ## Features
 - Pulls both full catalogues from `/products.json`, paginated (250 per page, 10 pages by default). Price = lowest variant price.
-- Matching: same handle first, else a fuzzy title score (rapidfuzz `token_sort_ratio`) within the same vendor. There's a **threshold slider** for how strict it is.
+- Matching: same handle first, else a fuzzy title score (rapidfuzz `token_sort_ratio`) within the same vendor and size group (kids tags like PS/TD/GS and women's must agree, so adult shoes don't match kids' sizes). There's a **threshold slider** for how strict it is.
 - **Covered**: my price, their price, the difference, the % difference, and an "I'm more expensive / I'm cheaper" flag.
 - **Missing**: what they sell and I don't, most expensive first.
 - **Unique to me**.
@@ -46,6 +46,7 @@ Tests: `pip install pytest && pytest -q`
 ## Limitations
 - Only works on Shopify stores that expose `/products.json`. Some stores block it.
 - It compares list prices in each store's own currency, with no currency conversion.
+- Prices are current list prices, so a competitor's sale price shows up as a big gap.
 - Colourways and sizes listed as separate products may match one-to-many or miss. Use the slider and check the match score.
 - The browser demo runs on Pyodide. Browsers block cross-site requests (CORS), so it shows only the cached example and uses a difflib matcher in place of rapidfuzz (same results on the example). `docs/` holds copies of `app.py` and `gap.py`.
 
